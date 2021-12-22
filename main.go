@@ -30,10 +30,10 @@ const ManpageText =
 	paast - create pastes with different methods
 
 SYNOPSIS
-	cat code.txt | curl paa.st --data-binary @-
-	cat code.txt | curl paa.st -F 'foo=<-'
-	cat code.txt | curl paa.st -F '=<-'
-	cat code.txt | http paa.st
+	cat code.txt | curl {HOST} --data-binary @-
+	cat code.txt | curl {HOST} -F 'foo=<-'
+	cat code.txt | curl {HOST} -F '=<-'
+	cat code.txt | http {HOST}
 
 LIMITS
 	Maximum allowed request body size is 1 MB.
@@ -52,7 +52,6 @@ AUTHOR
 
 WWW
 	https://dun.ai
-	https://paa.st
 `
 
 var idSalt = os.Getenv("ID_SALT")
@@ -101,7 +100,7 @@ func NewHttpRoutes() *HttpRoutes {
 
 func (*HttpRoutes) Manpage(rw http.ResponseWriter, r *http.Request) {
 	rw.WriteHeader(200)
-	rw.Write([]byte(ManpageText))
+	rw.Write([]byte(strings.ReplaceAll(ManpageText, "{HOST}", r.Host)))
 }
 
 func PasteFromMultipart(r *http.Request) ([]byte, error) {
